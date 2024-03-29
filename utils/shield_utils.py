@@ -69,7 +69,6 @@ def create_task_rule(task_id, rule_config):
 
 
 def archive_task_rule(task_id, rule_id): 
-    print(task_id, rule_id)
     r = requests.delete(
         f'{ARTHUR_SHIELD_API_URL}/tasks/{task_id}/rules/{rule_id}',
         headers ={
@@ -139,6 +138,25 @@ def task_prompt_validation(prompt, convo_id, task_id):
         json = {
             "prompt": prompt,
             "conversation_id": convo_id
+        },
+        verify=False
+    ) 
+
+    resp = json.loads(r.text)
+    return resp
+
+
+def task_response_validation(response, context, inference_id, task_id): 
+
+    r = requests.post(
+        f'{ARTHUR_SHIELD_API_URL}/tasks/{task_id}/validate_response/{inference_id}',
+        headers ={
+            'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+            'Content-type':'application/json' 
+        },
+        json = {
+            "response": response,
+            "context": context
         },
         verify=False
     ) 
