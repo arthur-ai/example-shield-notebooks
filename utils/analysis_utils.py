@@ -12,11 +12,11 @@ def plot_toxicity_scores_distrubution(df):
 
 
 def print_performance_metrics(df):
-    accuracy = accuracy_score(df["binary_label"], df["shield_result"])
-    precision = precision_score(df["binary_label"], df["shield_result"])
-    recall = recall_score(df["binary_label"], df["shield_result"])
-    f1 = f1_score(df["binary_label"], df["shield_result"])
-    conf_matrix = confusion_matrix(df["binary_label"], df["shield_result"])
+    accuracy = accuracy_score(df["label"], df["shield_result"])
+    precision = precision_score(df["label"], df["shield_result"])
+    recall = recall_score(df["label"], df["shield_result"])
+    f1 = f1_score(df["label"], df["shield_result"])
+    conf_matrix = confusion_matrix(df["label"], df["shield_result"])
 
     print("Accuracy:", accuracy)
     print("Precision:", precision)
