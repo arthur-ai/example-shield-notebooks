@@ -2,6 +2,8 @@
 
 import requests
 import json
+import random
+import pandas as pd 
 
 ARTHUR_SHIELD_URL = None
 ARTHUR_SHIELD_API_URL = None
@@ -17,8 +19,63 @@ def setup_env(base_url, api_key):
 
     return f"Setup against: {ARTHUR_SHIELD_API_URL}"
 
+
+def set_up_task_and_rule(rule_config, task_prefix): 
+    # 1 - Create Task 
+    random_number = random.randint(1, 10000)
+    task_name = f"{task_prefix}-{random_number}"
+    task = create_task(task_name)
+
+    # 2 - Disable all rules (if there any default)
+    for rule in task["rules"]:
+        archive_task_rule(task["id"], rule["id"])
+
+    # 3 - Create Rule 
+    rule = create_task_rule(task_id=task["id"], rule_config=rule_config)
+
+    # Get updated task 
+    return rule, get_task(task["id"])
+
+
+def validate_task_setup(task, rule_type): 
+    if (len(task["rules"]) > 1):
+        raise Exception("Cannot have more than one rule enabled for this test.")
+    else: 
+        if task["rules"][0]["type"] != rule_type:
+                raise Exception("Invalid rule type enabled. Must be PromptInjectionRule.")
+        else: 
+            print(f"Valid task {task}")
+
+
+def run_shield_evaluation(df, task, rule): 
+    task_id = task["id"]
+
+    def shield_eval_prompt(row): 
+        shield_result = task_prompt_validation(row.text, 1, task_id)
+
+        # shield_prompt_inference = task_prompt_validation("dummy", 1, task_id)
+        # inference_id = shield_prompt_inference["inference_id"]
+        # shield_result = task_response_validation(row.text, row.context, inference_id, task_id)
+
+        for rule_result in shield_result["rule_results"]:
+            if rule_result["id"] == rule["id"]:
+                result = rule_result["result"]
+                
+                if result == "Pass": 
+                    result = False
+                else:
+                    result = True
+                return result, shield_result
+            
+            else: 
+                return None, None
+    
+    df[["shield_result", "shield_result_full_detail"]] = df.apply(shield_eval_prompt, axis=1).apply(pd.Series)
+
+    return df
+
+
 def create_task(task_name): 
-    print(ARTHUR_SHIELD_API_URL)
     r = requests.post(
         f'{ARTHUR_SHIELD_API_URL}/task',
         headers ={
