@@ -1,0 +1,4 @@
+context,text,binary_label
+Arthur was founded in 2018. The sky is blue., Google was founded in 2018, 1
+Arthur was founded in 2018. The sky is blue., Arthur was founded in 2018, 0
+Arthur was founded in 2018. The sky is blue., The sky is green., 1

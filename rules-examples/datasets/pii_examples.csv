@@ -1,0 +1,29 @@
+,text,label,categories,span
+0,Ada Lovelace was born on 10 December 1815 at 2:34pm,True,"PERSON, DATE_TIME","Ada Lovelace, 10 December 1815"
+1,Ada Lovelace's full name is Augusta Ada King,True,"PERSON, PERSON","Ada Lovelace's, Augusta Ada King"
+2,Ada Lovelace was a mathematician and writer,True,PERSON,Ada Lovelace
+3,She was the first to recognise that the machine had applications beyond pure calculation.,False,,
+4,she was a British mathematician and writer,True,NRP,British
+5,"she is chiefly known for her work on Charles Babbage's proposed mechanical general-purpose computer, the Analytical Engine",True,PERSON,Charles Babbage's
+6,"she died on November 27, 1852",True,DATE_TIME,"November 27, 1852"
+7,"what many consider to be the first computer program—that is, an algorithm designed to be carried out by a machine.",False,,
+8,Her email address is ada.lovelace@gmail.com,True,"EMAIL_ADDRESS, URL","ada.lovelace@gmail.com, gmail.com"
+9,she is buried in Nottinghamshire in a parish church in the Church of England,True,LOCATION,Nottinghamshire
+10,her phone number is 281-221-9543,True,PHONE_NUMBER,281-221-9543
+11,her wikipedia article is linked here https://en.wikipedia.org/wiki/Ada_Lovelace,True,URL,https://en.wikipedia.org/wiki/Ada_Lovelace
+12,Her Visa credit card number is 378282246310005,True,CREDIT_CARD,378282246310005
+13,Her IBAN code is GB60BARC20040491278966,True,IBAN_CODE,GB60BARC20040491278966
+14,Her IP address is 138.137.11.243,True,IP_ADDRESS,138.137.11.243
+15,"Under her mother's influence, Ada had a religious transformation toward Christianity.",True,"PERSON, NRP","Ada, Christianity"
+16,Her bank routing number is 844841438234,True,US_BANK_NUMBER,844841438234
+17,Her drivers license number is 9572184048,True,US_DRIVER_LICENSE,9572184048
+18,Her US ITN number is 991-78-8867,True,"LOCATION, US_ITIN, US_SSN","US, 991-78-8867, 991-78-8867"
+19,Her passport number is 770022534,True,US_PASSPORT,770022534
+20,Her social security number is 213-85-7954,True,US_SSN,213-85-7954
+21,She married in 1835,True,DATE_TIME,1835
+22,She did not have a relationship with her father. He died when she was eight years old. ,True,DATE_TIME,eight years old
+23,Her mother was the only significant parental figure in her life,False,,
+24,"She apparently lost more than £3,000 gambling on horses",False,,
+25,She was privately educated in mathematics and science. Her favorite subject was differential calculus,False,,
+26,She believed that intuition and imagination were critical to effectively applying mathematical and scientific concepts.,False,,
+27,Her legacy remains ,False,,
