@@ -47,15 +47,13 @@ def validate_task_setup(task, rule_type):
             print(f"Valid task {task}")
 
 
-def run_shield_evaluation(df, task, rule): 
+def run_shield_evaluation(df, task, rule, verbose=True): 
     task_id = task["id"]
 
     def shield_eval_prompt(row): 
         shield_result = task_prompt_validation(row.text, 1, task_id)
 
-        # shield_prompt_inference = task_prompt_validation("dummy", 1, task_id)
-        # inference_id = shield_prompt_inference["inference_id"]
-        # shield_result = task_response_validation(row.text, row.context, inference_id, task_id)
+        if verbose: print("===============\n", row)
 
         for rule_result in shield_result["rule_results"]:
             if rule_result["id"] == rule["id"]:
