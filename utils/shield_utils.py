@@ -4,6 +4,7 @@ import requests
 import json
 import random
 import pandas as pd 
+import urllib.parse
 
 ARTHUR_SHIELD_URL = None
 ARTHUR_SHIELD_API_URL = None
@@ -241,3 +242,90 @@ def update_task_rule(task_id, rule_id, enable):
     else:
         err = f"Unable to archive task rule with status {r.status_code}:{r.text}"
         raise Exception(err)
+    
+def query_inferences(start, end, task_ids=None, rule_types=None, rule_statuses=None): 
+
+    iso_string_end = end.strftime('%Y-%m-%dT%H:%M:%S.%f')
+    iso_string_start = start.strftime('%Y-%m-%dT%H:%M:%S.%f')
+
+    encoded_iso_string_end= urllib.parse.quote(iso_string_end)
+    encoded_iso_string_start = urllib.parse.quote(iso_string_start)
+    
+    url = f'{ARTHUR_SHIELD_API_URL}/inferences/query?start_time={encoded_iso_string_start}&end_time={encoded_iso_string_end}'
+
+    if task_ids:
+        for task_id in task_ids: 
+            url = url + f"&task_ids={task_id}"
+
+    if rule_types:
+        for rule_type in rule_types: 
+            url = url + f"&rule_types={rule_type}"
+
+    if rule_statuses:
+        for rule_status in rule_statuses: 
+            url = url + f"&rule_statuses={rule_status}"
+
+    def query(url, page, page_size):
+        url = url + f'&sort=desc&page_size={page_size}&page={page}'
+        print(url)
+        r = requests.get(
+                url,
+                headers ={
+                    'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+                    'Content-type':'application/json' 
+                },
+                verify=False
+            )
+        if r.status_code == 200: 
+            resp = json.loads(r.text)
+            return resp
+        else: 
+            raise Exception(r.text)
+
+    all_inferences = []
+    page = 0
+    page_size = 100
+    while True: 
+        try:
+            result = query(url, page, page_size)
+            inferences = result["inferences"]
+            if len(inferences) == 0: 
+                break
+            all_inferences.extend(inferences)
+            page+=1
+        except Exception as e: 
+            print(e)
+            break
+    return all_inferences
+
+
+def get_token_usage(start, end, groupby_task=False, groupby_rule_type=False): 
+
+    iso_string_end = end.strftime('%Y-%m-%dT%H:%M:%S.%f')
+    iso_string_start = start.strftime('%Y-%m-%dT%H:%M:%S.%f')
+
+    encoded_iso_string_end= urllib.parse.quote(iso_string_end)
+    encoded_iso_string_start = urllib.parse.quote(iso_string_start)
+
+    url = f'{ARTHUR_SHIELD_API_URL}/usage/tokens?start_time={encoded_iso_string_start}&end_time={encoded_iso_string_end}'
+    
+    if groupby_task: 
+        url = url + f'&group_by=task'
+
+    if groupby_rule_type: 
+        url = url + f'&group_by=rule_type'
+
+    print(url)
+    r = requests.get(
+            url,
+            headers ={
+                'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+                'Content-type':'application/json' 
+            },
+            verify=False
+    )
+    if r.status_code == 200: 
+        resp = json.loads(r.text)
+        return resp
+    else: 
+        raise Exception(r.text)
