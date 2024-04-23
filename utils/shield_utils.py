@@ -201,6 +201,23 @@ def task_prompt_validation(prompt, convo_id, task_id):
     resp = json.loads(r.text)
     return resp
 
+def create_default_rule(rule_config):
+    r = requests.post(
+        f'{ARTHUR_SHIELD_API_URL}/default_rules',
+        headers ={
+            'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+            'Content-type':'application/json' 
+        },
+        json = rule_config,
+        verify=False
+    )
+
+    if r.status_code == 200: 
+        return json.loads(r.text)
+    else: 
+        err = f"Unable to create default rule with status {r.status_code}:{r.text}"
+        raise Exception(err)
+
 
 def task_response_validation(response, context, inference_id, task_id): 
 
