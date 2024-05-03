@@ -284,7 +284,6 @@ def query_inferences(start, end, task_ids=None, rule_types=None, rule_statuses=N
 
     def query(url, page, page_size):
         url = url + f'&sort=desc&page_size={page_size}&page={page}'
-        print(url)
         r = requests.get(
                 url,
                 headers ={
@@ -346,3 +345,58 @@ def get_token_usage(start, end, groupby_task=False, groupby_rule_type=False):
         return resp
     else: 
         raise Exception(r.text)
+
+def search_tasks(page_size=50, all_tasks=False, task_ids=[]): 
+    tasks = []
+
+    if all_tasks: 
+        page = 0
+        while True:
+            url = f'{ARTHUR_SHIELD_API_URL}/tasks/search?sort=desc&page_size={page_size}&page={page}'
+            r = requests.post(
+                    url,
+                    headers ={
+                        'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+                        'Content-type':'application/json' 
+                    },
+                    json={},
+                    verify=False
+                )
+
+            if r.status_code == 200: 
+                resp = json.loads(r.text)
+                current_page_tasks = resp["tasks"]
+            else: 
+                err = f"Unable to serach tasks with status {r.status_code}:{r.text}"
+                raise Exception(err)
+            
+            if not current_page_tasks:
+                break
+            tasks.extend(current_page_tasks)
+            page += 1
+    else: 
+        url = f'{ARTHUR_SHIELD_API_URL}/tasks/search?sort=desc&page_size=250&page=0'
+        r = requests.post(
+                url,
+                headers ={
+                    'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+                    'Content-type':'application/json' 
+                },
+                json={
+                    "task_ids": task_ids
+                },
+                verify=False
+        )
+
+        if r.status_code == 200: 
+            resp = json.loads(r.text)
+            current_page_tasks = resp["tasks"]
+        else: 
+            err = f"Unable to serach tasks with status {r.status_code}:{r.text}"
+            raise Exception(err)
+        
+        tasks.extend(current_page_tasks)
+        
+    print(f"Fetched {len(tasks)} total tasks.")
+
+    return tasks
