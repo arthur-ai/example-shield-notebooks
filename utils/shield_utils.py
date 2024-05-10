@@ -193,7 +193,7 @@ def task_prompt_validation(prompt, convo_id, task_id):
         },
         json = {
             "prompt": prompt,
-            "conversation_id": convo_id
+            "conversation_id": str(convo_id)
         },
         verify=False
     ) 
