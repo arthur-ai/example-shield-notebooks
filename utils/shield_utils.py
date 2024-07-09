@@ -197,9 +197,11 @@ def task_prompt_validation(prompt, convo_id, task_id):
         },
         verify=False
     ) 
-
-    resp = json.loads(r.text)
-    return resp
+    try:
+        resp = json.loads(r.text)
+        return resp
+    except Exception as e:
+        print(e)
 
 def create_default_rule(rule_config):
     r = requests.post(
