@@ -1,4 +1,4 @@
-'''Heler functions'''
+'''Helper functions'''
 
 import requests
 import json
@@ -133,9 +133,8 @@ def archive_task_rule(task_id, rule_id):
         },
         verify=False
     )
-
     if r.status_code == 204: 
-        return r.text
+        return "Success"
     else: 
         err = f"Unable to archive task rule with status {r.status_code}:{r.text}"
         raise Exception(err)
@@ -151,8 +150,8 @@ def archive_task(task_id):
         verify=False
     )
 
-    if r.status_code == 200: 
-        return json.loads(r.text)
+    if r.status_code == 204: 
+        return "Success"
     else: 
         err = f"Unable to archive task with status {r.status_code}:{r.text}"
         raise Exception(err)
@@ -218,6 +217,23 @@ def create_default_rule(rule_config):
         return json.loads(r.text)
     else: 
         err = f"Unable to create default rule with status {r.status_code}:{r.text}"
+        raise Exception(err)
+
+
+def archive_default_rule(rule_id):
+    r = requests.delete(
+        f'{ARTHUR_SHIELD_API_URL}/default_rules/{rule_id}',
+        headers ={
+            'Authorization':'Bearer %s' % ARTHUR_SHIELD_API_KEY,
+            'Content-type':'application/json' 
+        },
+        verify=False
+    )
+
+    if r.status_code == 200: 
+        return json.loads(r.text)
+    else: 
+        err = f"Unable to archive default rule with status {r.status_code}:{r.text}"
         raise Exception(err)
 
 
